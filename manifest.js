@@ -1,5 +1,6 @@
 export default {
   name: 'Polly for Chrome',
+  description: 'Transform any text on the web into high-quality, natural-sounding audio with Amazon Polly\'s advanced AI voices.',
   version: process.env.npm_package_version,
   manifest_version: 3,
   permissions: [
@@ -58,5 +59,5 @@ export default {
       matches: ['<all_urls>']
     }
   ],
-  homepage_url: 'https://github.com/vivswan/polly-for-chrome'
+  homepage_url: 'https://vivswan.github.io/polly-for-chrome/'
 }
