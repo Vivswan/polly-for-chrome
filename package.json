@@ -63,7 +63,7 @@
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "sharp": "^0.34.5",
-    "tailwindcss": "~3.2.7",
+    "tailwindcss": "~4.1.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "yaml-loader": "^0.8.1"
