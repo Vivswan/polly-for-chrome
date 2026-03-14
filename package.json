@@ -73,7 +73,7 @@
   "dependencies": {
     "@aws-sdk/client-polly": "^3.980.0",
     "@tailwindcss/postcss": "^4.1.18",
-    "@types/sanitize-html": "^2.16.0",
+    "@types/sanitize-html": "^2.16.1",
     "dotenv": "^17.2.3",
     "esbuild": "^0.27.2",
     "fuse.js": "^7.1.0",
@@ -82,7 +82,7 @@
     "react-dom": "^19.2.4",
     "react-feather": "^2.0.10",
     "react-router-dom": "^7.13.0",
-    "sanitize-html": "^2.17.0",
+    "sanitize-html": "^2.17.1",
     "tailwind-merge": "^3.4.0",
     "wink-eng-lite-web-model": "^1.8.1",
     "wink-nlp": "^2.4.0"
