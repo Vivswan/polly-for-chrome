@@ -75,7 +75,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@types/sanitize-html": "^2.16.0",
     "dotenv": "^17.2.3",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.4",
     "fuse.js": "^7.1.0",
     "he": "^1.2.0",
     "react": "^19.2.4",
