@@ -53,10 +53,7 @@ export function chunkSSML(text: string): string[] {
 export function chunkText(text: string): string[] {
 	if (isSSML(text)) return chunkSSML(text);
 
-	return nlp
-		.readDoc(text)
-		.sentences()
-		.out();
+	return nlp.readDoc(text).sentences().out();
 }
 
 /**
