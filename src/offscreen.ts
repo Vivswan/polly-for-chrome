@@ -23,7 +23,10 @@ const handlers = {
 	play: function (payload?: unknown): Promise<string> {
 		const { audioUri } = (payload ?? {}) as { audioUri?: string };
 		return new Promise((resolve, reject) => {
-			if (!audioUri) reject("No audioUri provided");
+			if (!audioUri) {
+				reject(new Error("No audioUri provided"));
+				return;
+			}
 
 			console.log("Attempting to play audio URI:", audioUri.substring(0, 100) + "...");
 			console.log("Audio URI length:", audioUri.length);
@@ -43,14 +46,14 @@ const handlers = {
 					.then(() => console.log("Audio playback started"))
 					.catch((e) => {
 						console.error("Play error:", e);
-						reject("Error while trying to play audio: " + e);
+						reject(new Error(`Error while trying to play audio: ${e instanceof Error ? e.message : String(e)}`));
 					});
 			};
 
 			audioElement.onerror = function (e) {
 				console.error("Audio element error:", e);
 				console.error("Audio element error details:", audioElement.error);
-				reject(`Error loading audio source: ${audioElement.error?.message || "Unknown error"}`);
+				reject(new Error(`Error loading audio source: ${audioElement.error?.message || "Unknown error"}`));
 			};
 
 			audioElement.onended = function () {
