@@ -1,5 +1,6 @@
 import { Engine, OutputFormat, PollyClient, SynthesizeSpeechCommand, TextType, VoiceId } from "@aws-sdk/client-polly";
 import { fileExtMap } from "../../helpers/file-helpers";
+import { chunkText, isSSML } from "../../helpers/text-helpers";
 import { SyncStorage, SynthesizeParams } from "../../types";
 import { AUDIO_CHUNK_SIZE } from "../state";
 import { sendMessageToCurrentTab } from "../utils/messaging";
@@ -35,7 +36,7 @@ export async function synthesize(params: SynthesizeParams): Promise<string> {
 
 	let ssml;
 	let textToSynthesize = text;
-	if (text.isSSML()) {
+	if (isSSML(text)) {
 		ssml = text;
 		textToSynthesize = undefined;
 	}
@@ -132,7 +133,7 @@ export async function getAudioUri({
 	const sync = (await chrome.storage.sync.get()) as SyncStorage;
 	const voice = sync.voices[sync.language];
 
-	const chunks = text.chunk();
+	const chunks = chunkText(text);
 	console.log("Chunked text into", chunks.length, "chunks", chunks);
 
 	const promises = chunks.map((text) =>

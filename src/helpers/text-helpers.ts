@@ -5,23 +5,26 @@ import sanitizeHtml from "sanitize-html";
 
 const nlp = winkNLP(model);
 
-String.prototype.chunk = function () {
-	if (this.isSSML()) return this.chunkSSML();
+/**
+ * Checks if text is valid SSML (wrapped in <speak> tags)
+ */
+export function isSSML(text: string): boolean {
+	const trimmedText = text.trim();
+	return trimmedText.startsWith("<speak>") && trimmedText.endsWith("</speak>");
+}
 
-	return nlp
-		.readDoc(this as string)
-		.sentences()
-		.out();
-};
-
-String.prototype.chunkSSML = function () {
+/**
+ * Chunks SSML text into smaller pieces while preserving tag structure
+ * Maximum chunk size is 5000 characters to comply with AWS Polly limits
+ */
+export function chunkSSML(text: string): string[] {
 	const maxChunkSize = 5000;
 	const speakStartTag = "<speak>";
 	const speakEndTag = "</speak>";
 	const chunks = [];
 	let currentChunk = "";
 
-	const content = this.slice(speakStartTag.length, -speakEndTag.length);
+	const content = text.slice(speakStartTag.length, -speakEndTag.length);
 
 	const regex = /(<[^>]*>|[^<]+)/g;
 	let match;
@@ -42,12 +45,19 @@ String.prototype.chunkSSML = function () {
 	}
 
 	return chunks;
-};
+}
 
-String.prototype.isSSML = function () {
-	const trimmedText = this.trim();
-	return trimmedText.startsWith("<speak>") && trimmedText.endsWith("</speak>");
-};
+/**
+ * Chunks text into sentences, or SSML chunks if text is SSML
+ */
+export function chunkText(text: string): string[] {
+	if (isSSML(text)) return chunkSSML(text);
+
+	return nlp
+		.readDoc(text)
+		.sentences()
+		.out();
+}
 
 /**
  * Sanitizes text for safe use in SSML synthesis
@@ -59,7 +69,7 @@ export function sanitizeTextForSSML(text: string): string {
 	if (!text) return "";
 
 	// If text is already valid SSML, return as-is
-	if (text.trim().startsWith("<speak>") && text.trim().endsWith("</speak>")) {
+	if (isSSML(text)) {
 		return text;
 	}
 

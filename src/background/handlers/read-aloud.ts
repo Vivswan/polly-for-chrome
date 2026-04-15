@@ -1,4 +1,4 @@
-import { sanitizeTextForSSML } from "../../helpers/text-helpers";
+import { chunkText, sanitizeTextForSSML } from "../../helpers/text-helpers";
 import { SyncStorage } from "../../types";
 import {
 	addToQueue,
@@ -33,7 +33,7 @@ export async function readAloud({ text, speed }: { text: string; speed?: number 
 	if (isPlaying()) await stopReading();
 
 	const sync = (await chrome.storage.sync.get()) as SyncStorage;
-	const chunks = text.chunk();
+	const chunks = chunkText(text);
 	console.log("Chunked text into", chunks.length, "chunks", chunks);
 
 	addToQueue(...chunks);

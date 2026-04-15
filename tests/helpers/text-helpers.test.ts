@@ -1,10 +1,5 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { sanitizeTextForSSML } from "@/helpers/text-helpers";
-
-// Import to register String prototype extensions
-beforeAll(async () => {
-	await import("@/helpers/text-helpers");
-});
+import { describe, it, expect } from "vitest";
+import { chunkSSML, chunkText, isSSML, sanitizeTextForSSML } from "@/helpers/text-helpers";
 
 describe("sanitizeTextForSSML", () => {
 	it("should return empty string for empty input", () => {
@@ -57,45 +52,45 @@ describe("sanitizeTextForSSML", () => {
 	});
 });
 
-describe("String.prototype.isSSML", () => {
+describe("isSSML", () => {
 	it("should return true for valid SSML", () => {
 		const ssml = "<speak>Hello world</speak>";
-		expect(ssml.isSSML()).toBe(true);
+		expect(isSSML(ssml)).toBe(true);
 	});
 
 	it("should return false for non-SSML text", () => {
 		const text = "Hello world";
-		expect(text.isSSML()).toBe(false);
+		expect(isSSML(text)).toBe(false);
 	});
 
 	it("should return false for HTML", () => {
 		const html = "<div>Hello world</div>";
-		expect(html.isSSML()).toBe(false);
+		expect(isSSML(html)).toBe(false);
 	});
 
 	it("should handle SSML with whitespace", () => {
 		const ssml = "  <speak>Hello world</speak>  ";
-		expect(ssml.isSSML()).toBe(true);
+		expect(isSSML(ssml)).toBe(true);
 	});
 });
 
-describe("String.prototype.chunk", () => {
+describe("chunkText", () => {
 	it("should chunk plain text into sentences", () => {
 		const text = "Hello world. This is a test.";
-		const chunks = text.chunk();
+		const chunks = chunkText(text);
 		expect(chunks).toBeInstanceOf(Array);
 		expect(chunks.length).toBeGreaterThan(0);
 	});
 
 	it("should handle single sentence", () => {
 		const text = "Hello world.";
-		const chunks = text.chunk();
+		const chunks = chunkText(text);
 		expect(chunks).toHaveLength(1);
 	});
 
 	it("should use chunkSSML for SSML text", () => {
 		const ssml = "<speak>Hello world.</speak>";
-		const chunks = ssml.chunk();
+		const chunks = chunkText(ssml);
 		expect(chunks).toBeInstanceOf(Array);
 		expect(chunks.length).toBeGreaterThan(0);
 		chunks.forEach((chunk) => {
@@ -105,17 +100,17 @@ describe("String.prototype.chunk", () => {
 	});
 });
 
-describe("String.prototype.chunkSSML", () => {
+describe("chunkSSML", () => {
 	it("should chunk SSML text", () => {
 		const ssml = "<speak>Hello world.</speak>";
-		const chunks = ssml.chunkSSML();
+		const chunks = chunkSSML(ssml);
 		expect(chunks).toBeInstanceOf(Array);
 		expect(chunks.length).toBeGreaterThan(0);
 	});
 
 	it("should wrap chunks in speak tags", () => {
 		const ssml = "<speak>Hello world.</speak>";
-		const chunks = ssml.chunkSSML();
+		const chunks = chunkSSML(ssml);
 		chunks.forEach((chunk) => {
 			expect(chunk.startsWith("<speak>")).toBe(true);
 			expect(chunk.endsWith("</speak>")).toBe(true);
@@ -124,7 +119,7 @@ describe("String.prototype.chunkSSML", () => {
 
 	it("should handle SSML with prosody tags", () => {
 		const ssml = '<speak><prosody rate="medium">Hello world.</prosody></speak>';
-		const chunks = ssml.chunkSSML();
+		const chunks = chunkSSML(ssml);
 		expect(chunks).toBeInstanceOf(Array);
 		chunks.forEach((chunk) => {
 			expect(chunk).toContain("<speak>");
@@ -136,7 +131,7 @@ describe("String.prototype.chunkSSML", () => {
 		// Create a very long SSML text (longer than maxChunkSize)
 		const longText = "A".repeat(6000);
 		const ssml = `<speak>${longText}</speak>`;
-		const chunks = ssml.chunkSSML();
+		const chunks = chunkSSML(ssml);
 
 		// Should create multiple chunks
 		expect(chunks.length).toBeGreaterThan(1);
