@@ -152,5 +152,6 @@ export async function getAudioUri({
 	);
 	const audioContents = await Promise.all(promises);
 
-	return `data:audio/${fileExtMap[encoding]};base64,` + btoa(audioContents.map(atob).join(""));
+	// Concatenate base64 strings directly without decoding/re-encoding
+	return `data:audio/${fileExtMap[encoding]};base64,` + audioContents.join("");
 }
