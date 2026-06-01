@@ -78,7 +78,7 @@
     "esbuild": "^0.27.4",
     "fuse.js": "^7.1.0",
     "he": "^1.2.0",
-    "react": "^19.2.4",
+    "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-feather": "^2.0.10",
     "react-router-dom": "^7.13.0",
